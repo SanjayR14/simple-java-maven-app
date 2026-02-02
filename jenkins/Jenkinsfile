@@ -22,7 +22,6 @@ pipeline {
 
         stage('Test (Non-blocking)') {
             steps {
-                // Ignore test failures intentionally
                 sh 'mvn test -Denforcer.skip=true || true'
             }
             post {
