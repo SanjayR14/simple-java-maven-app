@@ -5,7 +5,7 @@ public class App {
     // 🔴 SECURITY ISSUE (Sonar will catch this)
     private static final String API_KEY = "HARDCODED_SECRET_123";
 
-    private String message = "Hello CI";
+    private String message = "Hello CI!";
 
     public static void main(String[] args) {
         riskyMethod();
