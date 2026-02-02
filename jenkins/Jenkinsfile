@@ -8,12 +8,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
                 sh 'mvn clean compile -Denforcer.skip=true'
@@ -63,5 +57,4 @@ pipeline {
             echo 'Pipeline FAILED – Quality Gate BLOCKED'
         }
     }
-    
 }
