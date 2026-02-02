@@ -1,34 +1,27 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven-3.9.12'
-        jdk 'JDK-17'
+    environment {
+        SONARQUBE_SERVER = 'SonarQube-Server'
     }
 
     stages {
 
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                sh 'mvn clean compile -Denforcer.skip=true'
+                git 'https://github.com/your-repo/simple-java-maven-app.git'
             }
         }
 
-        stage('Test (Non-blocking)') {
+        stage('Build & Test') {
             steps {
-                sh 'mvn test -Denforcer.skip=true || true'
-            }
-            post {
-                always {
-                    junit allowEmptyResults: true,
-                          testResults: 'target/surefire-reports/*.xml'
-                }
+                sh 'mvn clean verify'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('My Sonar Server') {
+                withSonarQubeEnv("${SONARQUBE_SERVER}") {
                     sh 'mvn sonar:sonar'
                 }
             }
@@ -36,15 +29,15 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 2, unit: 'MINUTES') {
+                timeout(time: 1, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Nexus / AWS') {
             steps {
-                echo 'Deploying application...'
+                echo "🚀 Deploying application..."
             }
         }
     }
