@@ -20,10 +20,15 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Test (Non-blocking)') {
             steps {
-                // Skip tests to allow SonarQube analysis to run
-                sh 'mvn test -Denforcer.skip=true -DskipTests=true'
+                // Do NOT fail pipeline if tests fail
+                sh 'mvn test -Denforcer.skip=true || true'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
+                }
             }
         }
 
@@ -35,7 +40,7 @@ pipeline {
             }
         }
 
-        stage('Quality Gate') {
+        stage('Quality Gate (Gatekeeper)') {
             steps {
                 timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
@@ -52,10 +57,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline completed successfully'
+            echo 'Pipeline SUCCESS – Quality Gate PASSED'
         }
         failure {
-            echo 'Pipeline failed due to Quality Gate or build issues'
+            echo 'Pipeline FAILED – Quality Gate BLOCKED deployment'
         }
     }
 }
