@@ -18,4 +18,16 @@ public class App {
     public int add(int a, int b) {
         return a + b;
     }
+    public int divide(int a, int b) {
+    return a / 0; // ❌ BUG: Division by zero
+}
+    public void process() {
+    try {
+        int x = 10 / 0;
+    } catch (Exception e) {
+        // ❌ Empty catch block
+    }
+}
+
+
 }
