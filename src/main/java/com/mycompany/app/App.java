@@ -9,7 +9,7 @@ public class App {
 
     public static void main(String[] args) {
         riskyMethod();
-        System.out.println("Hello World!");
+        System.out.println("Hello CI!");
     }
 
     // ✅ REQUIRED BY AppTest.java
