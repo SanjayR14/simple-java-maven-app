@@ -29,7 +29,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('My Sonar Server') {
-                    sh 'mvn sonar:sonar -Denforcer.skip=true'
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
@@ -46,15 +46,6 @@ pipeline {
             steps {
                 echo 'Deploying application...'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline SUCCESS – Quality Gate PASSED'
-        }
-        failure {
-            echo 'Pipeline FAILED – Quality Gate BLOCKED'
         }
     }
 }
