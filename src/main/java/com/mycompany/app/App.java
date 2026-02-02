@@ -1,19 +1,18 @@
-package com.mycompany.app;
-
-/**
- * Hello world!
- */
 public class App {
 
-    private static final String MESSAGE = "Hello CI!";
-
-    public App() {}
-
     public static void main(String[] args) {
-        System.out.println(MESSAGE);
+        riskyMethod();
+        System.out.println("Hello World!");
     }
 
-    public String getMessage() {
-        return MESSAGE;
+    private static void riskyMethod() {
+        try {
+            int x = 10 / 0;   // BUG: divide by zero
+        } catch (Exception e) {
+            // EMPTY catch block → BUG + CODE SMELL
+        }
     }
+
+    // SECURITY ISSUE
+    private static final String API_KEY = "HARDCODED_SECRET_123";
 }
