@@ -22,12 +22,13 @@ pipeline {
 
         stage('Test (Non-blocking)') {
             steps {
-                // Do NOT fail pipeline if tests fail
+                // Ignore test failures intentionally
                 sh 'mvn test -Denforcer.skip=true || true'
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
+                    junit allowEmptyResults: true,
+                          testResults: 'target/surefire-reports/*.xml'
                 }
             }
         }
@@ -40,7 +41,7 @@ pipeline {
             }
         }
 
-        stage('Quality Gate (Gatekeeper)') {
+        stage('Quality Gate') {
             steps {
                 timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
@@ -50,7 +51,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo 'Deploying to AWS / Nexus...'
+                echo 'Deploying application...'
             }
         }
     }
@@ -60,7 +61,7 @@ pipeline {
             echo 'Pipeline SUCCESS – Quality Gate PASSED'
         }
         failure {
-            echo 'Pipeline FAILED – Quality Gate BLOCKED deployment'
+            echo 'Pipeline FAILED – Quality Gate BLOCKED'
         }
     }
 }
