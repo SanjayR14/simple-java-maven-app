@@ -1,27 +1,30 @@
 pipeline {
     agent any
-    options {
-        skipStagesAfterUnstable()
-    }
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                sh 'mvn -B -DskipTests clean package'
+                checkout scm
             }
         }
-        stage('Test') {
+
+        stage('Build') {
             steps {
-                sh 'mvn test'
+                sh 'mvn clean install'
             }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('My Sonar Server') {
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
-        stage('Deliver') { 
+
+        stage('Deploy') {
             steps {
-                sh './jenkins/scripts/deliver.sh' 
+                echo 'Deploy stage (AWS / EC2 / S3 etc)'
             }
         }
     }
